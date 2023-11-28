@@ -1,5 +1,7 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
+// Alert is used for error handling
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -23,6 +25,12 @@ public class DVDCollectionApp1  extends Application {
         DVDCollectionAppView1  view = new DVDCollectionAppView1();
         view.update(model, 0);
         aPane.getChildren().add(view);
+
+
+        primaryStage.setTitle("My DVD Collection");
+        primaryStage.setResizable(false);
+        primaryStage.setScene(new Scene(aPane));
+        primaryStage.show();
 
         // The add song button
         view.getButtonPane().getAddButton().setOnAction(new EventHandler<ActionEvent>() {
@@ -50,8 +58,14 @@ public class DVDCollectionApp1  extends Application {
                     model.add(newSong);
                     view.update(model, 0);
                 } catch (Exception exception) {
-                    // Placeholder for an error so that the program will not just crash
-                    System.out.println("Something went wrong");
+                    // Uses an alert to notify the user that the input was invalid. This was not entirely necessary and
+                    // was not asked for in the tutorial, but it is still good to have.
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("An error occurred");
+                    alert.setHeaderText("The inputs you provided are invalid.");
+                    alert.setContentText("Please try again.");
+
+                    alert.showAndWait();
                 }
             }
         });
@@ -59,28 +73,29 @@ public class DVDCollectionApp1  extends Application {
         // The delete button
         view.getButtonPane().getDeleteButton().setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {
-                // Checks the selected value of the TitleList of the DVDCollectionAppView (1 or 2)
+                // Use this for AppView1
                 model.remove(view.getTitleList().getSelectionModel().getSelectedItem());
+                // The compiler won't let me implement both in a if else statement because the initial view variable
+                // will be what it is set to above.
+                // Use this for AppView2
+                // model.remove(view.getTitleList().getSelectionModel().getSelectedItem().getTitle());
                 view.update(model, 0);
             }
         });
 
-        // Highlights all the 3 sections (title, year, and length) when one is selected
+        // Highlights all the 3 sections (title, year, and length) when the title is selected
         view.getTitleList().setOnMousePressed(new EventHandler<MouseEvent>()
         {
             public void handle(MouseEvent mouseEvent) {
+                // Use this for AppView1 because AppView2 is not able to incorporate this
+                // Grabs the index of the current song selected
                 int index = view.getTitleList().getSelectionModel().getSelectedIndex();
                 view.getYearList().getSelectionModel().select(index);
-                view.update(model, 0);
+                view.getLengthList().getSelectionModel().select(index);
 
             }
         });
 
-
-        primaryStage.setTitle("My DVD Collection");
-        primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(aPane));
-        primaryStage.show();
     }
 
     public static void main(String[] args) {
