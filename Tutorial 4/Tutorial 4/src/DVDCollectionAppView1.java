@@ -2,7 +2,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 
-public class DVDCollectionAppView1 extends Pane {
+public class DVDCollectionAppView1 extends Pane implements DVDView {
     private ListView<String>    tList;
     private ListView<Integer>   yList, lList;
     private DVDButtonPane       buttonPane;
@@ -12,6 +12,16 @@ public class DVDCollectionAppView1 extends Pane {
     public ListView<Integer> getLengthList() { return lList; }
     public DVDButtonPane getButtonPane() { return buttonPane; }
 
+    public void update(DVDCollection model, int selectedDVD) {
+        tList.getItems().clear();
+        yList.getItems().clear();
+        lList.getItems().clear();
+        for (DVD disc : model.getDVDList()) {
+            tList.getItems().add(disc.getTitle());
+            yList.getItems().add(disc.getYear());
+            lList.getItems().add(disc.getDuration());
+        }
+    }
     public DVDCollectionAppView1() {
             // Create the labels
             Label label1 = new Label("Title");
